@@ -1,28 +1,36 @@
 <?php
- echo "Juego por rondas ". "</br>";
- 	 function readFileByLine($theFile, $theLine)
-    {
-    	$file = new SplFileObject($theFile);
-	    $file->seek($theLine);
-	    return $file->current();            
-    }
-	
-	$array0 = array_map('intval', explode(' ', readFileByLine("datos.txt", 2)));
-	$array1 = array_map('intval', explode(' ', readFileByLine("datos.txt", 3)));
- 	
- 	function subArray($arrA, $arrB)
-    {
-        $result = [];
-        $elem = count($arrA);
+//Archivo de texto simulado
+$archivo = "5
+140 82
+89 134
+90 110
+112 106
+88 90";
 
-        if ($elem == count($arrB)) {
-            for ($i = 0; $i < $elem; $i++) {
-                $result[$i] = $arrA[$i] - $arrB[$i];
-            }
-        }
-        return $result;
-    }
+//separo el archivo en un array
+$texto = preg_split('/\n/', $archivo);
 
-	$result = subArray($array0, $array1);
-	var_dump(max($result));
+//obtengo el numero de rondas
+$numRondas = intval($texto[0]);
+
+//inicializo las variables de resultado
+$ganador = 0;
+$diferiencia = 0;
+
+for ($i=1; $i<=$numRondas; $i++) {
+    $jugador1 = intval(preg_split('/\s+/', $texto[$i])[0]);
+    $jugador2 = intval(preg_split('/\s+/', $texto[$i])[1]);
+    $dif = abs($jugador1 - $jugador2);
+
+    if ($jugador1 > $jugador2 && $dif > $diferiencia) {
+        $ganador = 1;
+        $diferiencia = $dif;
+    } else if ($jugador2 > $jugador1 && $dif > $diferiencia) {
+        $ganador = 2;
+        $diferiencia = $dif;
+    }
+}
+
+var_dump($ganador . ' ' . $diferiencia);
+
 ?>
